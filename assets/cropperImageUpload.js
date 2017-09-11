@@ -42,8 +42,9 @@
         cropperOptions: {},
 
         cropperResultOpts: {
-            type: 'image/jpeg',
-            encoderOptions: .92
+            type: 'image/png', // image MIME type with no parameters
+            encoderOptions: .92, // number in the range 0.0 to 1.0, desired quality level
+            background: 'white' // color|gradient|pattern (https://www.w3schools.com/tags/canvas_fillstyle.asp)
         },
 
         watchOnChange: true,
@@ -94,7 +95,20 @@
             '</div>');
 
         $footer.find('.btn-save').on('click', function (e) {
-            var imgData = cropper.getCroppedCanvas().toDataURL(settings.cropperResultOpts.type, settings.cropperResultOpts.encoderOptions);
+            var canvas = cropper.getCroppedCanvas();
+
+            if (settings.cropperResultOpts.background !== 'transparent') {
+                var dCanvas = document.createElement('canvas');
+                dCanvas.width = canvas.width;
+                dCanvas.height = canvas.height;
+                var dCtx = dCanvas.getContext('2d');
+                dCtx.fillStyle = settings.cropperResultOpts.background;
+                dCtx.fillRect(0, 0, dCanvas.width, dCanvas.height);
+                dCtx.drawImage(canvas, 0, 0);
+                canvas = dCanvas;
+            }
+
+            var imgData = canvas.toDataURL(settings.cropperResultOpts.type, settings.cropperResultOpts.encoderOptions);
             settings.onCropSave.call($input, imgData, $cropInput, $resultImage);
             e.preventDefault();
         });
