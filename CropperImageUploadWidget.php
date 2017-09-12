@@ -20,11 +20,9 @@ class CropperImageUploadWidget extends InputWidget
      */
     public $crop = true;
     /**
-     * @var string crop ratio
-     * format is width:height where width and height are both floats
-     * If not set and has model, will be got from CropImageUploadBehavior
+     * @var float crop aspectRatio (width/height). By default, the crop box is free ratio.
      */
-    public $ratio;
+    public $cropAspectRatio;
     /**
      * @var string bs modal window selector
      * If not set, will be created Modal::widget().
@@ -41,12 +39,14 @@ class CropperImageUploadWidget extends InputWidget
     public $resultImageSel = '.img-result';
     /**
      * @var array the options for the Cropper plugin.
-     * Please refer to the Cropper documentation page for possible options.
      * @see https://github.com/fengyuanchen/cropperjs/blob/master/README.md#options
      */
     public $cropperOptions = [];
     /**
      * @var array of options for cropper result method
+     * - 'type' => 'image/jpeg' image MIME type with no parameters
+     * - 'encoderOptions' => .92 number in the range 0.0 to 1.0, desired quality level
+     * - 'background' => 'white' color|gradient|pattern (https://www.w3schools.com/tags/canvas_fillstyle.asp)
      */
     public $cropperResultOpts = [];
     /**
@@ -91,7 +91,7 @@ class CropperImageUploadWidget extends InputWidget
             $behavior = $model->hasMethod('findCropperBehavior') ? $model->findCropperBehavior($this->attribute) : null;
             if ($behavior !== null) {
                 $this->crop = $behavior->crop;
-                $this->ratio = $behavior->ratio;
+                $this->cropAspectRatio = $behavior->cropAspectRatio;
                 $this->cropperOptions = ArrayHelper::merge($this->cropperOptions, $behavior->cropperOptions);
                 $this->cropperResultOpts = ArrayHelper::merge($this->cropperResultOpts, $behavior->cropperResultOpts);
             }
@@ -122,7 +122,7 @@ class CropperImageUploadWidget extends InputWidget
         }
 
         $options = ArrayHelper::merge([
-            'aspectRatio' => $this->ratio,
+            'aspectRatio' => $this->cropAspectRatio,
             'modalSel' => $this->modalSel,
             'containerSel' => '.' . $this->containerClass,
             'cropInputSel' => '#' . $this->options['id'] . '_crop',

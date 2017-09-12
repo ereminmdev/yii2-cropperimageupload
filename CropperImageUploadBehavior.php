@@ -12,6 +12,7 @@ use yii\helpers\FileHelper;
  * @package ereminmdev\yii2\cropperimageupload
  *
  * @property ActiveRecord $owner
+ * @property void $uploadedFile
  */
 class CropperImageUploadBehavior extends UploadImageBehavior
 {
@@ -20,18 +21,18 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      */
     public $crop = true;
     /**
-     * @var float crop aspect ratio (width/height)
+     * @var float crop aspectRatio (width/height). By default, the crop box is free ratio.
      */
-    public $ratio;
+    public $cropAspectRatio;
     /**
      * @var string attribute that stores crop value
      * if empty, crop value is got from attribute field
      */
-    public $crop_field;
+    public $cropField;
     /**
      * @var string attribute that stores cropped image name
      */
-    public $cropped_field;
+    public $croppedField;
     /**
      * @var array the thumbnail profiles
      * - `width`
@@ -41,16 +42,18 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     public $thumbs = [];
     /**
      * @var array the options for the Cropper plugin.
-     * Please refer to the Cropper documentation page for possible options.
      * @see https://github.com/fengyuanchen/cropperjs/blob/master/README.md#options
      */
     public $cropperOptions = [];
     /**
      * @var array of options for cropper result method
+     * - 'type' => 'image/jpeg' image MIME type with no parameters
+     * - 'encoderOptions' => .92 number in the range 0.0 to 1.0, desired quality level
+     * - 'background' => 'white' color|gradient|pattern (https://www.w3schools.com/tags/canvas_fillstyle.asp)
      */
     public $cropperResultOpts = [];
 
-    protected $crop_value;
+    protected $cropValue;
     protected $action;
 
 
@@ -60,8 +63,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     public function init()
     {
         parent::init();
-
-        $this->cropped_field = $this->cropped_field !== null ? $this->cropped_field : $this->attribute;
+        $this->croppedField = $this->croppedField !== null ? $this->croppedField : $this->attribute;
     }
 
     /**
@@ -71,12 +73,12 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     {
         $model = $this->owner;
         if (in_array($model->scenario, $this->scenarios)) {
-            if (empty($this->crop_field)) {
-                $this->crop_value = $model->getAttribute($this->attribute);
-                $changed = !empty($this->crop_value);
+            if (empty($this->cropField)) {
+                $this->cropValue = $model->getAttribute($this->attribute);
+                $changed = !empty($this->cropValue);
             } else {
-                $this->crop_value = $model->getAttribute($this->crop_field);
-                $changed = $model->isAttributeChanged($this->crop_field);
+                $this->cropValue = $model->getAttribute($this->cropField);
+                $changed = $model->isAttributeChanged($this->cropField);
             }
 
             if ($changed) {
@@ -150,7 +152,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
     public function getUploadedFile()
     {
-        $value = $this->crop_value;
+        $value = $this->cropValue;
 
         if (mb_strpos($value, 'action=') === 0) {
             $this->action = mb_substr($value, 7);

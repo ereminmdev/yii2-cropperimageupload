@@ -28,7 +28,7 @@ public function behaviors()
                 'thumb' => ['width' => 42, 'height' => 42, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
                 'preview' => ['width' => 200, 'height' => 200, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
             ],
-            'ratio' => 1,
+            'cropAspectRatio' => 1,
         ],
     ];
 }
