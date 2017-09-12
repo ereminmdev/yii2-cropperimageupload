@@ -26,6 +26,18 @@
                     }
                 });
             }
+
+            if (settings.editOnResultClick) {
+                var $container = settings.containerSel ? $input.closest(settings.containerSel) : $input.parent(),
+                    $resultImage = $container.find(settings.resultImageSel);
+
+                if ($resultImage) {
+                    $resultImage.on('click', function () {
+                        var src = $resultImage.attr('data-src') || $resultImage.attr('src');
+                        $input.cropperImageUpload.cropInModal($input, settings, src);
+                    });
+                }
+            }
         });
     };
 
@@ -48,6 +60,7 @@
         },
 
         watchOnChange: true,
+        editOnResultClick: true,
 
         imageTag: 'img',
         imageAttrs: {
@@ -67,6 +80,7 @@
             $cropInput.val(resp).trigger('change');
             if ($resultImage) {
                 $resultImage.attr('src', resp);
+                $resultImage.removeAttr('data-src');
             }
         },
         onCropCancel: function () {
