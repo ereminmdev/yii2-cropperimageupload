@@ -6,7 +6,7 @@ use yii\web\AssetBundle;
 
 class CropperAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/npm/cropperjs/dist';
+    public $sourcePath = '@npm/cropperjs/dist';
 
     public $js = [
         YII_DEBUG ? 'cropper.js' : 'cropper.min.js',
