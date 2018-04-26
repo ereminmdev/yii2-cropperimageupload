@@ -44,3 +44,19 @@ View file:
     </div>
 <?php ActiveForm::end(); ?>
 ```
+
+## Tips
+
+If need for re-create thumbs, add to console/controller:
+
+```php
+foreach (Product::find()->each() as $model) {
+    $file_name = $model->getAttribute('image');
+
+    if ($model->recreateThumbs('image', true, true)) {
+        $this->stdout('Recreated successful: ' . $file_name . PHP_EOL);
+    } else {
+        $this->stdout('Error when recreating: ' . $file_name . PHP_EOL, Console::FG_RED);
+    }
+}
+```

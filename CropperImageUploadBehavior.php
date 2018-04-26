@@ -180,6 +180,46 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
+     * @param string $attribute
+     * @param bool $removeDirectory
+     * @param bool $saveModel
+     * @return bool
+     */
+    public function recreateThumbs($attribute, $removeDirectory = false, $saveModel = false)
+    {
+        $model = $this->owner;
+
+        $temp_name = $model->getAttribute($attribute);
+        $source_path = $model->getUploadPath($attribute);
+
+        if (!empty($temp_name) && is_readable($source_path)) {
+            $temp_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_name;
+
+            try {
+                if (copy($source_path, $temp_path)) {
+                    $uploadedFile = $this->createUploadedFile($temp_name, $temp_path);
+                    $model->setAttribute($attribute, $uploadedFile);
+
+                    if ($removeDirectory) {
+                        FileHelper::removeDirectory(dirname($source_path));
+                    }
+
+                    if ($saveModel) {
+                        $model->save(true, [$attribute]);
+                    }
+
+                    @unlink($temp_path);
+
+                    return true;
+                }
+            } catch (\Exception $e) {
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * @param string $data
      */
     protected function createFromBase64($data)
