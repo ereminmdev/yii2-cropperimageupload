@@ -255,7 +255,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             $temp_name = Yii::$app->security->generateRandomString() . '.' . $ext;
             $temp_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_name;
 
-            copy($url, $temp_path);
+            file_put_contents($url, file_get_contents($temp_path));
 
             $this->owner->setAttribute($this->attribute, $this->createUploadedFile($temp_name, $temp_path));
         } catch (\Exception $e) {
