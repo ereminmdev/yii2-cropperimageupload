@@ -77,11 +77,12 @@
             return true;
         },
         onCropSave: function (resp, $cropInput, $resultImage) {
-            $cropInput.val(resp).trigger('change');
             if ($resultImage) {
                 $resultImage.attr('src', resp);
                 $resultImage.removeAttr('data-src');
             }
+            $cropInput.val(resp).trigger('change');
+            $(this).val('');
         },
         onCropCancel: function () {
             $(this).val('');
@@ -138,6 +139,7 @@
         });
 
         $body.empty();
+        $modal.off('shown.bs.modal hidden.bs.modal');
         $modal.modal('show');
 
         $modal.one('shown.bs.modal', function () {
@@ -164,6 +166,10 @@
 
                     cropper = new Cropper($image[0], cropperOptions);
                 });
+        });
+
+        $modal.one('hidden.bs.modal', function () {
+            $body.empty();
         });
     };
 
