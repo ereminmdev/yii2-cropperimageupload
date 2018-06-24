@@ -129,8 +129,6 @@ class CropperImageUploadWidget extends InputWidget
             'resultImageSel' => $this->resultImageSel,
             'btnSaveText' => Yii::t('app', 'Save'),
             'btnCancelText' => Yii::t('app', 'Cancel'),
-            'btnRotateLeft' => '<i class="fa fa-rotate-left"></i>',
-            'btnRotateRight' => '<i class="fa fa-rotate-right"></i>',
             'cropperOptions' => $this->cropperOptions,
             'cropperResultOpts' => $this->cropperResultOpts,
         ], $this->clientOptions);
