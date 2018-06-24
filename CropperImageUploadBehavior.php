@@ -113,9 +113,9 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      */
     public function getImageUrl($attribute, $thumb = 'thumb', $placeholderUrl = '')
     {
-        $thumb = in_array($thumb, array_keys($this->thumbs)) ? $thumb : false;
+        $behavior = $this->findCropperBehavior($attribute) ?? $this;
+        $thumb = in_array($thumb, array_keys($behavior->thumbs)) ? $thumb : false;
 
-        $behavior = $this->findCropperBehavior($attribute);
         if ($behavior !== null) {
             if ($thumb !== false) {
                 return $behavior->getThumbUploadUrl($attribute, $thumb);
