@@ -70,8 +70,8 @@
 
         btnSaveText: 'Save',
         btnCancelText: 'Cancel',
-        btnRotateLeft: '&#8630;',
-        btnRotateRight: '&#8631;',
+        btnRotateLeft: '&larrpl;',
+        btnRotateRight: '&cudarrl;',
 
         onBeforeCrop: function (imageSrc, settings) {
             return true;
