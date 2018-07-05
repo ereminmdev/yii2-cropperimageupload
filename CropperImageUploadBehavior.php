@@ -132,6 +132,22 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
+     * Returns file url for the attribute.
+     * @param string $attribute
+     * @return string|null
+     */
+    public function getUploadUrl($attribute)
+    {
+        $behavior = $this->findCropperBehavior($attribute) ?? $this;
+
+        if ($behavior === $this) {
+            return parent::getUploadUrl($attribute);
+        } else {
+            return $behavior->getUploadUrl($attribute);
+        }
+    }
+
+    /**
      * @param string $attribute
      * @return self|null
      */

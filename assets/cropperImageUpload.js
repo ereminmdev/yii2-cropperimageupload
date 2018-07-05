@@ -2,19 +2,19 @@
     'use strict';
 
     $.fn.cropperImageUpload = function (options) {
-        var settings = $.extend(true, {}, $.fn.cropperImageUpload.defaults, options);
+        let settings = $.extend(true, {}, $.fn.cropperImageUpload.defaults, options);
 
         return this.each(function () {
-            var $input = $(this);
+            let $input = $(this);
 
             //$input.attr('data-cropper-settings', settings);
 
             if (settings.watchOnChange) {
                 $input.on('change', function () {
-                    var file = this.files[0];
+                    let file = this.files[0];
 
                     if (file && file.type.match('image.*')) {
-                        var reader = new FileReader();
+                        let reader = new FileReader();
 
                         reader.onloadend = function () {
                             if (settings.onBeforeCrop.call($input, reader.result, settings) && settings.modalSel) {
@@ -28,12 +28,12 @@
             }
 
             if (settings.editOnResultClick) {
-                var $container = settings.containerSel ? $input.closest(settings.containerSel) : $input.parent(),
+                let $container = settings.containerSel ? $input.closest(settings.containerSel) : $input.parent(),
                     $resultImage = $container.find(settings.resultImageSel);
 
                 if ($resultImage) {
                     $resultImage.on('click', function () {
-                        var src = $resultImage.attr('data-src') || $resultImage.attr('src');
+                        let src = $resultImage.attr('data-src') || $resultImage.attr('src');
                         $input.cropperImageUpload.cropInModal($input, settings, src);
                     });
                 }
@@ -90,7 +90,7 @@
     };
 
     $.fn.cropperImageUpload.cropInModal = function ($input, settings, imageSrc) {
-        var $container = settings.containerSel ? $input.closest(settings.containerSel) : $input.parent(),
+        let $container = settings.containerSel ? $input.closest(settings.containerSel) : $input.parent(),
             $cropInput = settings.cropInputSel ? $container.find(settings.cropInputSel) : $input.prev('input'),
             $modal = $(settings.modalSel),
             $resultImage = $container.find(settings.resultImageSel),
@@ -99,7 +99,7 @@
 
         $modal.find('.modal-title').html(settings.modalTitle);
 
-        var $footer = settings.modalFooter ? settings.modalFooter : $('<div class="cropper-modal-footer">' +
+        let $footer = settings.modalFooter ? settings.modalFooter : $('<div class="cropper-modal-footer">' +
             '<button type="button" class="btn btn-primary btn-save" data-dismiss="modal">' + settings.btnSaveText + '</button>' +
             '&nbsp; ' +
             '<button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">' + settings.btnCancelText + '</button>' +
@@ -110,20 +110,20 @@
             '</div>');
 
         $footer.find('.btn-save').on('click', function (e) {
-            var canvas = cropper.getCroppedCanvas();
+            let canvas = cropper.getCroppedCanvas();
 
             if (settings.cropperResultOpts.background !== 'transparent') {
-                var dCanvas = document.createElement('canvas');
+                let dCanvas = document.createElement('canvas');
                 dCanvas.width = canvas.width;
                 dCanvas.height = canvas.height;
-                var dCtx = dCanvas.getContext('2d');
+                let dCtx = dCanvas.getContext('2d');
                 dCtx.fillStyle = settings.cropperResultOpts.background;
                 dCtx.fillRect(0, 0, dCanvas.width, dCanvas.height);
                 dCtx.drawImage(canvas, 0, 0);
                 canvas = dCanvas;
             }
 
-            var imgData = canvas.toDataURL(settings.cropperResultOpts.type, settings.cropperResultOpts.encoderOptions);
+            let imgData = canvas.toDataURL(settings.cropperResultOpts.type, settings.cropperResultOpts.encoderOptions);
             settings.onCropSave.call($input, imgData, $cropInput, $resultImage);
             e.preventDefault();
         });
@@ -148,16 +148,16 @@
                 .one('load', function () {
                     $image.attr(settings.imageAttrs).css(settings.imageCSS);
 
-                    var $imageWrapper = $('<div class="cropper-image-upload__container"></div>').append($image);
+                    let $imageWrapper = $('<div class="cropper-image-upload__container"></div>').append($image);
 
                     $body.append($imageWrapper).append($footer);
 
-                    var w = $imageWrapper.innerWidth();
-                    var vw = w - 80;
-                    var wh = Math.round(vw / settings.aspectRatio);
+                    let w = $imageWrapper.innerWidth();
+                    let vw = w - 80;
+                    let wh = Math.round(vw / settings.aspectRatio);
                     $imageWrapper.height(wh + 80);
 
-                    var cropperOptions = {
+                    let cropperOptions = {
                         aspectRatio: settings.aspectRatio,
                         autoCropArea: 1,
                         dragMode: 'move'
