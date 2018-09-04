@@ -99,10 +99,18 @@ class CropperImageUploadBehavior extends UploadImageBehavior
         $model = $this->owner;
         if (in_array($model->scenario, $this->scenarios)) {
             if ($this->action == 'delete') {
-                $this->delete($this->attribute, true);
+                $this->removeImage($this->attribute);
                 $this->owner->setAttribute($this->attribute, '');
             }
         }
+    }
+
+    /**
+     * @param string $attribute
+     */
+    public function removeImage($attribute)
+    {
+        $this->delete($attribute, true);
     }
 
     /**
