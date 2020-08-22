@@ -20,7 +20,7 @@ public function behaviors()
         'avatar' => [
             'class' => CropperImageUploadBehavior::class,
             'attribute' => 'avatar',
-            'scenarios' => ['create', 'update'],
+            'scenarios' => ['create', 'update'], //['default'],
             'placeholder' => '@app/modules/user/assets/images/avatar.jpg',
             'path' => '@webroot/upload/avatar/{id}',
             'url' => '@web/upload/avatar/{id}',

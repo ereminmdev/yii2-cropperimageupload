@@ -52,6 +52,10 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      * - 'background' => 'white' color|gradient|pattern (https://www.w3schools.com/tags/canvas_fillstyle.asp)
      */
     public $cropperResultOpts = [];
+    /**
+     * @var bool true to delete dir on model delete
+     */
+    public $deleteDir = false;
 
     protected $cropValue;
     protected $action;
@@ -106,6 +110,21 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
+     * @inheritDoc
+     * @throws \yii\base\ErrorException
+     */
+    public function afterDelete()
+    {
+        parent::afterDelete();
+
+        if ($this->deleteDir) {
+            $upload_path = $this->getUploadPath($this->attribute);
+            $dir = dirname($upload_path);
+            FileHelper::removeDirectory($dir);
+        }
+    }
+
+    /**
      * @param string $attribute
      */
     public function removeImage($attribute)
@@ -152,6 +171,23 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             return parent::getUploadUrl($attribute);
         } else {
             return $behavior->getUploadUrl($attribute);
+        }
+    }
+
+    /**
+     * Returns file path for the attribute.
+     * @param string $attribute
+     * @param boolean $old
+     * @return string|null
+     */
+    public function getUploadPath($attribute, $old = false)
+    {
+        $behavior = $this->findCropperBehavior($attribute) ?? $this;
+
+        if ($behavior === $this) {
+            return parent::getUploadPath($attribute, $old);
+        } else {
+            return $behavior->getUploadPath($attribute, $old);
         }
     }
 
