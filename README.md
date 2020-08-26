@@ -20,7 +20,7 @@ public function behaviors()
         'avatar' => [
             'class' => CropperImageUploadBehavior::class,
             'attribute' => 'avatar',
-            'scenarios' => ['create', 'update'], //['default'],
+            'scenarios' => ['default'], //['create', 'update'],
             'placeholder' => '@app/modules/user/assets/images/avatar.jpg',
             'path' => '@webroot/upload/avatar/{id}',
             'url' => '@web/upload/avatar/{id}',
@@ -38,7 +38,7 @@ View file:
 
 ```php
 <?php $form = ActiveForm::begin(); ?>
-    <?= $form->field($model, 'photo')->widget(CropperImageUploadWidget::class) ?>
+    <?= $form->field($model, 'avatar')->widget(CropperImageUploadWidget::class) ?>
     <div class="form-group">
         <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
     </div>
@@ -47,16 +47,27 @@ View file:
 
 ## Tips
 
-If need for re-create thumbs, add to console/controller:
+- If need for re-create thumbs, add to console/controller:
 
 ```php
 foreach (Product::find()->each() as $model) {
-    $file_name = $model->getAttribute('image');
+    $file_name = $model->getAttribute('avatar');
 
-    if ($model->recreateThumbs('image', true, true)) {
+    if ($model->recreateThumbs('avatar', true, true)) {
         $this->stdout('Recreated successful: ' . $file_name . PHP_EOL);
     } else {
         $this->stdout('Error when recreating: ' . $file_name . PHP_EOL, Console::FG_RED);
     }
+}
+```
+
+- To support svg images:
+
+```php
+public function rules()
+{
+    return [
+        [['avatar'], 'file', 'extensions' => 'jpg, jpeg, gif, png, svg'],
+    ];
 }
 ```
