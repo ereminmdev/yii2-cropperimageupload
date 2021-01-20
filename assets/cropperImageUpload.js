@@ -33,8 +33,7 @@
 
                 if ($resultImage) {
                     $resultImage.on('click', function () {
-                        let src = $resultImage.attr('data-src') || $resultImage.attr('src');
-                        $input.cropperImageUpload.cropInModal($input, settings, src);
+                        $input.trigger('click');
                     });
                 }
             }
