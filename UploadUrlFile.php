@@ -8,7 +8,7 @@ use yii\web\UploadedFile;
 class UploadUrlFile extends UploadedFile
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function saveAs($file, $deleteTempFile = true)
     {

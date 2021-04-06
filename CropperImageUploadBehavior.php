@@ -62,7 +62,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function init()
     {
@@ -71,7 +71,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function beforeValidate()
     {
@@ -94,7 +94,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function beforeSave()
     {
@@ -110,7 +110,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      * @throws \yii\base\ErrorException
      */
     public function afterDelete()
