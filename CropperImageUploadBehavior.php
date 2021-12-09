@@ -4,6 +4,7 @@ namespace ereminmdev\yii2\cropperimageupload;
 
 use mohorev\file\UploadImageBehavior;
 use Yii;
+use yii\base\ErrorException;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 
@@ -53,9 +54,9 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      */
     public $cropperResultOpts = [];
     /**
-     * @var bool true to delete dir on model delete
+     * @var bool|string remove directory after model deleted. Set true to use `path` option or string as path.
      */
-    public $deleteDir = false;
+    public $deleteDir = true;
 
     protected $cropValue;
     protected $action;
@@ -111,15 +112,15 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
     /**
      * {@inheritdoc}
-     * @throws \yii\base\ErrorException
+     * @throws ErrorException
      */
     public function afterDelete()
     {
         parent::afterDelete();
 
         if ($this->deleteDir) {
-            $upload_path = $this->getUploadPath($this->attribute);
-            $dir = dirname($upload_path);
+            $dir = $this->deleteDir === true ? $this->resolvePath($this->path) : $this->deleteDir;
+            $dir = Yii::getAlias($dir);
             FileHelper::removeDirectory($dir);
         }
     }
@@ -220,7 +221,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             $this->createFromBase64($value);
         } elseif (filter_var($value, FILTER_VALIDATE_URL)) {
             $this->createFromUrl($value);
-        };
+        }
     }
 
     /**
