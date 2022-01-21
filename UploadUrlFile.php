@@ -4,7 +4,6 @@ namespace ereminmdev\yii2\cropperimageupload;
 
 use yii\web\UploadedFile;
 
-
 class UploadUrlFile extends UploadedFile
 {
     /**

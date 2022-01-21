@@ -1,73 +1,82 @@
 # yii2-cropperimageupload
 
-Crop image upload for Yii framework.
+Image crop and upload for Yii framework.
 
-This widget depend on:
+Depends on:
 - https://github.com/mohorev/yii2-upload-behavior
 - https://github.com/fengyuanchen/cropperjs
 
 ## Install
 
-``composer require ereminmdev/yii-cropperimageupload``
+``composer require --prefer-dist ereminmdev/yii-cropperimageupload``
 
 ## Use
 
-```
+Add some code to model and view files:
+
+- model:
+
+```php
 public function behaviors()
 {
     return [
-        ...
         'avatar' => [
             'class' => CropperImageUploadBehavior::class,
             'attribute' => 'avatar',
-            'scenarios' => ['default'], //['create', 'update'],
-            'placeholder' => '@app/modules/user/assets/images/avatar.jpg',
+            'scenarios' => ['default', 'create', 'update'],
+            'placeholder' => '@app/modules/user/assets/images/no-avatar.jpg',
             'path' => '@webroot/upload/avatar/{id}',
             'url' => '@web/upload/avatar/{id}',
             'thumbs' => [
-                'thumb' => ['width' => 42, 'height' => 42, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
-                'preview' => ['width' => 200, 'height' => 200, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
+                'thumb' => ['width' => 60, 'height' => 60, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
+                'preview' => ['width' => 240, 'height' => 240, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
             ],
             'cropAspectRatio' => 1,
         ],
     ];
 }
+
+public function rules()
+{
+    return [
+        [['avatar'], 'file', 'extensions' => 'jpg, jpeg, gif, png, svg, webp'],
+    ];
+}
 ```
 
-View file:
+- view:
 
 ```php
-<?php $form = ActiveForm::begin(); ?>
-    <?= $form->field($model, 'avatar')->widget(CropperImageUploadWidget::class) ?>
-    <div class="form-group">
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
-    </div>
-<?php ActiveForm::end(); ?>
+<?= $form->field($model, 'avatar')->widget(CropperImageUploadWidget::class) ?>
 ```
 
 ## Tips
 
-- If need for re-create thumbs, add to console/controller:
+- Re-create thumbs:
 
 ```php
-foreach (Product::find()->each() as $model) {
-    $file_name = $model->getAttribute('avatar');
+foreach (User::find()->each() as $model) {
+    $filename = $model->getAttribute('avatar');
 
     if ($model->recreateThumbs('avatar', true, true)) {
-        $this->stdout('Recreated successful: ' . $file_name . PHP_EOL);
+        $this->stdout('Recreated successful: ' . $filename . PHP_EOL);
     } else {
-        $this->stdout('Error when recreating: ' . $file_name . PHP_EOL, Console::FG_RED);
+        $this->stdout('Error when recreating: ' . $filename . PHP_EOL, Console::FG_RED);
     }
 }
 ```
 
-- To support svg images:
+- Store in WebP format:
 
 ```php
-public function rules()
+public function behaviors()
 {
     return [
-        [['avatar'], 'file', 'extensions' => 'jpg, jpeg, gif, png, svg'],
+        ...
+        'avatar' => [
+            ...
+            'cropperResultOpts' => ['type' => 'image/webp'],
+        ],
     ];
 }
 ```

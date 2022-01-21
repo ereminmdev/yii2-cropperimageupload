@@ -4,7 +4,6 @@ namespace ereminmdev\yii2\cropperimageupload;
 
 use yii\web\AssetBundle;
 
-
 class CropperImageUploadAsset extends AssetBundle
 {
     public $sourcePath = '@vendor/ereminmdev/yii2-cropperimageupload/assets';
