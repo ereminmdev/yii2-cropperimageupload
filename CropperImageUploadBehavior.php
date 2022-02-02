@@ -119,7 +119,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
         parent::afterDelete();
 
         if ($this->deleteDir) {
-            $dir = $this->deleteDir === true ? $this->resolvePath($this->path) : $this->deleteDir;
+            $dir = $this->deleteDir === true ? $this->resolvePath($this->deleteDir) : $this->deleteDir;
             $dir = Yii::getAlias($dir);
             FileHelper::removeDirectory($dir);
         }
