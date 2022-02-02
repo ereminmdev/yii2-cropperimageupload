@@ -28,8 +28,8 @@ public function behaviors()
             'path' => '@webroot/upload/avatar/{id}',
             'url' => '@web/upload/avatar/{id}',
             'thumbs' => [
-                'thumb' => ['width' => 60, 'height' => 60, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
-                'preview' => ['width' => 240, 'height' => 240, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
+                'thumb' => ['width' => 60, 'height' => 60, 'quality' => 80, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
+                'preview' => ['width' => 240, 'height' => 240],
             ],
             'cropAspectRatio' => 1,
         ],
@@ -74,6 +74,9 @@ public function behaviors()
     return [
         ...
         'avatar' => [
+            'thumbs' => [
+                'thumb' => ['width' => 60, 'height' => 60, 'quality' => 80],
+            ],            
             ...
             'cropperResultOpts' => ['type' => 'image/webp'],
         ],
