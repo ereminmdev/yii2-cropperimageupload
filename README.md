@@ -68,6 +68,8 @@ foreach (User::find()->each() as $model) {
 
 - Store in WebP format:
 
+1) Add `cropperResultOpts` option to behavior config:
+
 ```php
 public function behaviors()
 {
@@ -80,6 +82,17 @@ public function behaviors()
             ...
             'cropperResultOpts' => ['type' => 'image/webp'],
         ],
+    ];
+}
+```
+
+2) Add `webp` extension to rules:
+
+```
+public function rules()
+{
+    return [
+        [['avatar'], 'file', 'extensions' => 'jpg, jpeg, gif, png, svg, webp'],
     ];
 }
 ```
