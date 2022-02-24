@@ -32,6 +32,7 @@ public function behaviors()
                 'preview' => ['width' => 240, 'height' => 240],
             ],
             'cropAspectRatio' => 1,
+            'convertToWebP' => true,
         ],
     ];
 }
@@ -63,36 +64,5 @@ foreach (User::find()->each() as $model) {
     } else {
         $this->stdout('Error when recreating: ' . $filename . PHP_EOL, Console::FG_RED);
     }
-}
-```
-
-- Store in WebP format:
-
-1) Add `cropperResultOpts` option to behavior config:
-
-```php
-public function behaviors()
-{
-    return [
-        ...
-        'avatar' => [
-            'thumbs' => [
-                'thumb' => ['width' => 60, 'height' => 60, 'quality' => 80],
-            ],            
-            ...
-            'cropperResultOpts' => ['type' => 'image/webp'],
-        ],
-    ];
-}
-```
-
-2) Add `webp` extension to rules:
-
-```
-public function rules()
-{
-    return [
-        [['avatar'], 'file', 'extensions' => 'jpg, jpeg, gif, png, svg, webp'],
-    ];
 }
 ```

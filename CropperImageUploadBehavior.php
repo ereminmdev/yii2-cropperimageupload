@@ -7,6 +7,7 @@ use Yii;
 use yii\base\ErrorException;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
+use yii\web\UploadedFile;
 
 /**
  * Class CropperImageUploadBehavior
@@ -35,13 +36,6 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      */
     public $croppedField;
     /**
-     * @var array the thumbnail profiles
-     * - `width`
-     * - `height`
-     * - `quality`
-     */
-    public $thumbs = [];
-    /**
      * @var array the options for the Cropper plugin.
      * @see https://github.com/fengyuanchen/cropperjs/blob/master/README.md#options
      */
@@ -53,6 +47,17 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      * - 'background' => 'white' color|gradient|pattern (https://www.w3schools.com/tags/canvas_fillstyle.asp)
      */
     public $cropperResultOpts = [];
+    /**
+     * @var array the thumbnail profiles
+     * - `width`
+     * - `height`
+     * - `quality`
+     */
+    public $thumbs = [];
+    /**
+     * @var bool convert uploaded file to WebP image format
+     */
+    public $convertToWebP = false;
     /**
      * @var bool|string remove directory after model deleted. Set true to use `path` option or string as path.
      */
@@ -91,6 +96,10 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             }
 
             parent::beforeValidate();
+
+            if ($this->convertToWebP) {
+                $this->convertUploadedFileToWebP();
+            }
         }
     }
 
@@ -241,6 +250,73 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
+     * @param string $data
+     */
+    public function createFromBase64($data)
+    {
+        try {
+            list($type, $data) = explode(';', $data);
+            list(, $data) = explode(',', $data);
+            $ext = mb_substr($type, mb_strrpos($type, '/') + 1);
+            $data = base64_decode($data);
+
+            $temp_name = Yii::$app->security->generateRandomString() . '.' . $ext;
+            $temp_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_name;
+
+            file_put_contents($temp_path, $data);
+
+            $this->owner->setAttribute($this->attribute, $this->createUploadedFile($temp_name, $temp_path));
+        } catch (\Exception $e) {
+        }
+    }
+
+    /**
+     * @param string $url
+     */
+    public function createFromUrl($url)
+    {
+        if (!filter_var($url, FILTER_VALIDATE_URL)) return;
+
+        $url = str_replace(' ', '+', $url);
+        $url = strpos($url, '//') === 0 ? 'http://' . ltrim($url, '/') : $url;
+
+        try {
+            $ext = preg_match('/\.(jpe?g|gif|png).*$/', $url, $match) ? $match[1] : pathinfo($url, PATHINFO_EXTENSION);
+            $temp_name = Yii::$app->security->generateRandomString() . '.' . $ext;
+            $temp_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_name;
+
+            file_put_contents($temp_path, file_get_contents($url));
+
+            $this->owner->setAttribute($this->attribute, $this->createUploadedFile($temp_name, $temp_path));
+        } catch (\Exception $e) {
+        }
+    }
+
+    public function convertUploadedFileToWebP()
+    {
+        if ($this->file instanceof UploadedFile) {
+            $tempName = $this->file->tempName;
+            $newTempName = $tempName . '.webp';
+            $extension = $this->file->extension;
+
+            if (!in_array($extension, ['jpg', 'jpeg', 'png'])) {
+                return;
+            }
+
+            $im = in_array($extension, ['jpg', 'jpeg']) ? @imagecreatefromjpeg($tempName) : @imagecreatefrompng($tempName);
+
+            if ($im) {
+                imagewebp($im, $newTempName);
+                imagedestroy($im);
+            }
+
+            $newName = preg_replace('/' . $extension . '$/', 'webp', $this->file->name);
+            $this->file = $this->createUploadedFile($newName, $newTempName);
+            $this->owner->setAttribute($this->attribute, $this->file);
+        }
+    }
+
+    /**
      * @param string $attribute
      * @param bool $removeDirectory
      * @param bool $saveModel
@@ -278,48 +354,5 @@ class CropperImageUploadBehavior extends UploadImageBehavior
         }
 
         return false;
-    }
-
-    /**
-     * @param string $data
-     */
-    protected function createFromBase64($data)
-    {
-        try {
-            list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
-            $ext = mb_substr($type, mb_strrpos($type, '/') + 1);
-            $data = base64_decode($data);
-
-            $temp_name = Yii::$app->security->generateRandomString() . '.' . $ext;
-            $temp_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_name;
-
-            file_put_contents($temp_path, $data);
-
-            $this->owner->setAttribute($this->attribute, $this->createUploadedFile($temp_name, $temp_path));
-        } catch (\Exception $e) {
-        }
-    }
-
-    /**
-     * @param string $url
-     */
-    protected function createFromUrl($url)
-    {
-        if (!filter_var($url, FILTER_VALIDATE_URL)) return;
-
-        $url = str_replace(' ', '+', $url);
-        $url = strpos($url, '//') === 0 ? 'http://' . ltrim($url, '/') : $url;
-
-        try {
-            $ext = preg_match('/\.(jpe?g|gif|png){1}.*$/', $url, $match) ? $match[1] : pathinfo($url, PATHINFO_EXTENSION);
-            $temp_name = Yii::$app->security->generateRandomString() . '.' . $ext;
-            $temp_path = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $temp_name;
-
-            file_put_contents($temp_path, file_get_contents($url));
-
-            $this->owner->setAttribute($this->attribute, $this->createUploadedFile($temp_name, $temp_path));
-        } catch (\Exception $e) {
-        }
     }
 }
