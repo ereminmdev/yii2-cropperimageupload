@@ -57,7 +57,11 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     /**
      * @var bool convert uploaded file to WebP image format
      */
-    public $convertToWebP = false;
+    public $convertToWebP = true;
+    /**
+     * @var int quality ranges from 0 (worst quality, smaller file) to 100 (best quality, biggest file)
+     */
+    public $convertQuality = 80;
     /**
      * @var bool|string remove directory after model deleted. Set true to use `path` option or string as path.
      */
@@ -306,7 +310,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             $im = in_array($extension, ['jpg', 'jpeg']) ? @imagecreatefromjpeg($tempName) : @imagecreatefrompng($tempName);
 
             if ($im) {
-                imagewebp($im, $newTempName);
+                imagewebp($im, $newTempName, $this->convertQuality);
                 imagedestroy($im);
             }
 

@@ -32,7 +32,6 @@ public function behaviors()
                 'preview' => ['width' => 240, 'height' => 240],
             ],
             'cropAspectRatio' => 1,
-            'convertToWebP' => true,
         ],
     ];
 }

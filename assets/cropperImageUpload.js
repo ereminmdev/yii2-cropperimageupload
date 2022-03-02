@@ -53,9 +53,9 @@
         cropperOptions: {},
 
         cropperResultOpts: {
-            type: 'image/jpeg', // image MIME type with no parameters
-            encoderOptions: .92, // number in the range 0.0 to 1.0, desired quality level
-            background: 'white' // color|gradient|pattern (https://www.w3schools.com/tags/canvas_fillstyle.asp)
+            type: 'image/webp', // image MIME type with no parameters
+            encoderOptions: .8, // number in the range 0.0 to 1.0, desired quality level
+            background: 'transparent' // color|gradient|pattern (https://www.w3schools.com/tags/canvas_fillstyle.asp)
         },
 
         watchOnChange: true,
