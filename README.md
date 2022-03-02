@@ -39,7 +39,7 @@ public function behaviors()
 public function rules()
 {
     return [
-        [['avatar'], 'file', 'extensions' => 'jpg, jpeg, gif, png, svg, webp'],
+        [['avatar'], 'image', 'extensions' => 'jpg, jpeg, gif, png, svg, webp'],
     ];
 }
 ```
