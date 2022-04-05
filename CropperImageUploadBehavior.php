@@ -311,6 +311,8 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
             if ($im) {
                 imagepalettetotruecolor($im);
+                imagealphablending($im, true);
+                imagesavealpha($im, true);
                 imagewebp($im, $newTempName, $this->convertQuality);
                 imagedestroy($im);
             }
