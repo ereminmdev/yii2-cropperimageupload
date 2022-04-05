@@ -7,6 +7,7 @@ use Yii;
 use yii\base\ErrorException;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
+use yii\helpers\Html;
 use yii\web\UploadedFile;
 
 /**
@@ -69,7 +70,6 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
     protected $cropValue;
     protected $action;
-
 
     /**
      * {@inheritdoc}
@@ -170,6 +170,27 @@ class CropperImageUploadBehavior extends UploadImageBehavior
                 return $placeholderUrl;
             }
         }
+    }
+
+    /**
+     * @param string $attribute
+     * @param string|false $thumb
+     * @param array $options
+     * @return string
+     */
+    public function renderThumbImage($attribute, $thumb = 'thumb', $options = [])
+    {
+        $behavior = $this->findCropperBehavior($attribute) ?? $this;
+        $thumbConfig = $behavior->thumbs[$thumb] ?? [];
+
+        if ($thumb) {
+            $options['alt'] = $options['alt'] ?? '';
+            $options['width'] = $options['width'] ?? ($thumbConfig['width'] ?? null);
+            $options['height'] = $options['height'] ?? ($thumbConfig['height'] ?? null);
+            $options['loading'] = $options['loading'] ?? 'lazy';
+        }
+
+        return Html::img($this->getImageUrl($attribute, $thumb), $options);
     }
 
     /**

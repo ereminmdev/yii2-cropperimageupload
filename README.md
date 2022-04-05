@@ -3,6 +3,7 @@
 Image crop and upload for Yii framework.
 
 Depends on:
+
 - https://github.com/mohorev/yii2-upload-behavior
 - https://github.com/fengyuanchen/cropperjs
 
@@ -44,10 +45,16 @@ public function rules()
 }
 ```
 
-- view:
+- form field:
 
 ```php
 <?= $form->field($model, 'avatar')->widget(CropperImageUploadWidget::class) ?>
+```
+
+- html image:
+
+```php
+<?= $model->renderThumbImage('avatar') ?>
 ```
 
 ## Tips
