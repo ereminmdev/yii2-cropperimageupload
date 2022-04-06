@@ -144,22 +144,34 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      * @param array $options
      * @return string
      */
-    public function renderThumbImage($attribute, $thumb = 'thumb', $options = [])
+    public function renderThumbImage($attribute, $thumb = true, $options = [])
     {
         $behavior = $this->findCropperBehavior($attribute) ?? $this;
 
         if (($thumb === true) && !empty($this->thumbs)) {
-            $thumb = array_key_first($this->thumbs);
+            $thumb = false;
+            foreach ($this->thumbs as $key => $unused) {
+                $thumb = $key;
+                break;
+            }
         }
 
         $config = $behavior->thumbs[$thumb] ?? [];
 
         if ($thumb) {
             $options['alt'] = $options['alt'] ?? '';
+            $options['loading'] = $options['loading'] ?? 'lazy';
             $options['width'] = $options['width'] ?? ($config['width'] ?? null);
             $options['height'] = $options['height'] ?? ($config['height'] ?? null);
-            $options['loading'] = $options['loading'] ?? 'lazy';
-            $options['aspect-ratio'] = $this->cropAspectRatio ?? null;
+
+            if ($this->cropAspectRatio) {
+                $options['aspect-ratio'] = $this->cropAspectRatio;
+                if ($options['width']) {
+                    $options['height'] = null;
+                } else {
+                    $options['width'] = null;
+                }
+            }
         }
 
         return Html::img($this->getImageUrl($attribute, $thumb), $options);
