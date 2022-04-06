@@ -165,7 +165,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             $options['height'] = $options['height'] ?? ($config['height'] ?? null);
 
             if ($this->cropAspectRatio) {
-                $options['aspect-ratio'] = $this->cropAspectRatio;
+                Html::addCssStyle($options, ['aspect-ratio' => $this->cropAspectRatio], false);
                 if ($options['width']) {
                     $options['height'] = null;
                 } else {
