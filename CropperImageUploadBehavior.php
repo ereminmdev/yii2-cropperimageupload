@@ -159,6 +159,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             $options['width'] = $options['width'] ?? ($config['width'] ?? null);
             $options['height'] = $options['height'] ?? ($config['height'] ?? null);
             $options['loading'] = $options['loading'] ?? 'lazy';
+            $options['aspect-ratio'] = $this->cropAspectRatio ?? null;
         }
 
         return Html::img($this->getImageUrl($attribute, $thumb), $options);
