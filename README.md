@@ -55,6 +55,7 @@ public function rules()
 
 ```php
 <?= $model->renderThumbImage('avatar') ?>
+<?= $model->renderThumbImage('avatar', 'preview', ['alt'=>'Avatar']) ?>
 ```
 
 ## Tips

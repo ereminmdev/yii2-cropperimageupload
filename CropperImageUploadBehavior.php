@@ -140,6 +140,32 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
     /**
      * @param string $attribute
+     * @param string|bool $thumb true - first thumb, false - main uploaded image
+     * @param array $options
+     * @return string
+     */
+    public function renderThumbImage($attribute, $thumb = 'thumb', $options = [])
+    {
+        $behavior = $this->findCropperBehavior($attribute) ?? $this;
+
+        if (($thumb === true) && !empty($this->thumbs)) {
+            $thumb = array_key_first($this->thumbs);
+        }
+
+        $config = $behavior->thumbs[$thumb] ?? [];
+
+        if ($thumb) {
+            $options['alt'] = $options['alt'] ?? '';
+            $options['width'] = $options['width'] ?? ($config['width'] ?? null);
+            $options['height'] = $options['height'] ?? ($config['height'] ?? null);
+            $options['loading'] = $options['loading'] ?? 'lazy';
+        }
+
+        return Html::img($this->getImageUrl($attribute, $thumb), $options);
+    }
+
+    /**
+     * @param string $attribute
      */
     public function removeImage($attribute)
     {
@@ -170,27 +196,6 @@ class CropperImageUploadBehavior extends UploadImageBehavior
                 return $placeholderUrl;
             }
         }
-    }
-
-    /**
-     * @param string $attribute
-     * @param string|false $thumb
-     * @param array $options
-     * @return string
-     */
-    public function renderThumbImage($attribute, $thumb = 'thumb', $options = [])
-    {
-        $behavior = $this->findCropperBehavior($attribute) ?? $this;
-        $thumbConfig = $behavior->thumbs[$thumb] ?? [];
-
-        if ($thumb) {
-            $options['alt'] = $options['alt'] ?? '';
-            $options['width'] = $options['width'] ?? ($thumbConfig['width'] ?? null);
-            $options['height'] = $options['height'] ?? ($thumbConfig['height'] ?? null);
-            $options['loading'] = $options['loading'] ?? 'lazy';
-        }
-
-        return Html::img($this->getImageUrl($attribute, $thumb), $options);
     }
 
     /**
