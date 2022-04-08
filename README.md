@@ -40,7 +40,7 @@ public function behaviors()
 public function rules()
 {
     return [
-        [['avatar'], 'image', 'extensions' => 'jpg, jpeg, gif, png, svg, webp'],
+        [['avatar'], 'file', 'extensions' => 'jpg, jpeg, gif, png, svg, webp'],
     ];
 }
 ```
