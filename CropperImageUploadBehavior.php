@@ -148,9 +148,9 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     {
         $behavior = $this->findCropperBehavior($attribute) ?? $this;
 
-        if (($thumb === true) && !empty($this->thumbs)) {
+        if (($thumb === true) && !empty($behavior->thumbs)) {
             $thumb = false;
-            foreach ($this->thumbs as $key => $unused) {
+            foreach ($behavior->thumbs as $key => $unused) {
                 $thumb = $key;
                 break;
             }
@@ -164,8 +164,8 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             $options['width'] = $options['width'] ?? ($config['width'] ?? null);
             $options['height'] = $options['height'] ?? ($config['height'] ?? null);
 
-            if ($this->cropAspectRatio) {
-                Html::addCssStyle($options, ['aspect-ratio' => $this->cropAspectRatio], false);
+            if ($behavior->cropAspectRatio) {
+                Html::addCssStyle($options, ['aspect-ratio' => $behavior->cropAspectRatio], false);
                 if ($options['width']) {
                     $options['height'] = null;
                 } else {
@@ -174,7 +174,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             }
         }
 
-        return Html::img($this->getImageUrl($attribute, $thumb), $options);
+        return Html::img($behavior->getImageUrl($attribute, $thumb), $options);
     }
 
     /**
@@ -204,7 +204,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             }
         } else {
             if ($thumb !== false) {
-                return $this->getPlaceholderUrl($thumb);
+                return $behavior->getPlaceholderUrl($thumb);
             } else {
                 return $placeholderUrl;
             }
