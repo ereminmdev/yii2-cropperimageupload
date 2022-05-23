@@ -318,8 +318,6 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      */
     public function createFromUrl($url)
     {
-        if (!filter_var($url, FILTER_VALIDATE_URL)) return;
-
         $url = str_replace(' ', '+', $url);
         $url = strpos($url, '//') === 0 ? 'http://' . ltrim($url, '/') : $url;
 
