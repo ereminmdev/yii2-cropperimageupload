@@ -125,6 +125,20 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
     /**
      * {@inheritdoc}
+     */
+    public function afterSave()
+    {
+        parent::afterSave();
+
+        // Revert value after protected in parent::beforeSave()
+        $model = $this->owner;
+        if ($model->getAttribute($this->attribute) === null) {
+            $model->setAttribute($this->attribute, $model->getOldAttribute($this->attribute));
+        }
+    }
+
+    /**
+     * {@inheritdoc}
      * @throws ErrorException
      */
     public function afterDelete()
