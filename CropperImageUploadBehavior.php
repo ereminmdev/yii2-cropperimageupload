@@ -148,21 +148,19 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     {
         $behavior = $this->findCropperBehavior($attribute) ?? $this;
 
-        if (($thumb === true) && !empty($behavior->thumbs)) {
+        if ($thumb === true) {
             $thumb = false;
-            foreach ($behavior->thumbs as $key => $unused) {
+            foreach ($behavior->thumbs as $key => $value) {
                 $thumb = $key;
                 break;
             }
         }
 
-        $config = $behavior->thumbs[$thumb] ?? [];
-
-        if ($thumb) {
+        if ($thumb && in_array($thumb, $behavior->thumbs)) {
             $options['alt'] = $options['alt'] ?? '';
             $options['loading'] = $options['loading'] ?? 'lazy';
-            $options['width'] = $options['width'] ?? ($config['width'] ?? null);
-            $options['height'] = $options['height'] ?? ($config['height'] ?? null);
+            $options['width'] = $options['width'] ?? ($behavior->thumbs[$thumb]['width'] ?? null);
+            $options['height'] = $options['height'] ?? ($behavior->thumbs[$thumb]['height'] ?? null);
 
             if ($behavior->cropAspectRatio) {
                 Html::addCssStyle($options, ['aspect-ratio' => $behavior->cropAspectRatio], false);
@@ -188,26 +186,17 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     /**
      * @param string $attribute
      * @param string|false $thumb
-     * @param string $placeholderUrl
      * @return string
      */
-    public function getImageUrl($attribute, $thumb = 'thumb', $placeholderUrl = '')
+    public function getImageUrl($attribute, $thumb = 'thumb')
     {
         $behavior = $this->findCropperBehavior($attribute) ?? $this;
         $thumb = in_array($thumb, array_keys($behavior->thumbs)) ? $thumb : false;
 
-        if ($behavior !== null) {
-            if ($thumb !== false) {
-                return $behavior->getThumbUploadUrl($attribute, $thumb);
-            } else {
-                return $behavior->getUploadUrl($attribute);
-            }
+        if ($thumb && in_array($thumb, $behavior->thumbs)) {
+            return $behavior->getThumbUploadUrl($attribute, $thumb);
         } else {
-            if ($thumb !== false) {
-                return $behavior->getPlaceholderUrl($thumb);
-            } else {
-                return $placeholderUrl;
-            }
+            return $behavior->getUploadUrl($attribute);
         }
     }
 
