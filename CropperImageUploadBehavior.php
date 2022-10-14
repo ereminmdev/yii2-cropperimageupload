@@ -156,7 +156,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             }
         }
 
-        if ($thumb && in_array($thumb, $behavior->thumbs)) {
+        if ($thumb && in_array($thumb, array_keys($behavior->thumbs))) {
             $options['alt'] = $options['alt'] ?? '';
             $options['loading'] = $options['loading'] ?? 'lazy';
             $options['width'] = $options['width'] ?? ($behavior->thumbs[$thumb]['width'] ?? null);
@@ -191,9 +191,8 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     public function getImageUrl($attribute, $thumb = 'thumb')
     {
         $behavior = $this->findCropperBehavior($attribute) ?? $this;
-        $thumb = in_array($thumb, array_keys($behavior->thumbs)) ? $thumb : false;
 
-        if ($thumb && in_array($thumb, $behavior->thumbs)) {
+        if ($thumb && in_array($thumb, array_keys($behavior->thumbs))) {
             return $behavior->getThumbUploadUrl($attribute, $thumb);
         } else {
             return $behavior->getUploadUrl($attribute);
