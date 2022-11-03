@@ -2,6 +2,7 @@
 
 namespace ereminmdev\yii2\cropperimageupload;
 
+use mohorev\file\UploadBehavior;
 use mohorev\file\UploadImageBehavior;
 use Yii;
 use yii\base\ErrorException;
@@ -257,7 +258,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
         } else {
             $owner = $this->owner;
             foreach ($owner->getBehaviors() as $behavior) {
-                if (($behavior instanceof self) && ($behavior->attribute == $attribute)) {
+                if (($behavior instanceof UploadBehavior) && ($behavior->attribute == $attribute)) {
                     return $behavior;
                 }
             }
