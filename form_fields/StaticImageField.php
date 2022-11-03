@@ -13,6 +13,10 @@ class StaticImageField extends ActiveField
 {
     public $inputOptions = [];
 
+    public $linkOptions = ['target' => '_blank'];
+
+    public $imageOptions = ['class' => 'img-responsive'];
+
     /**
      * {@inheritdoc}
      */
@@ -21,10 +25,10 @@ class StaticImageField extends ActiveField
         $model = $this->model;
 
         $text = $model->getAttribute($this->attribute);
-        $img = $model->renderThumbImage($this->attribute);
+        $img = $model->renderThumbImage($this->attribute, true, $this->imageOptions);
         $url = $model->getUploadUrl($this->attribute);
 
-        $this->parts['{input}'] = Html::tag('p', $text ? Html::a($img, $url, ['target' => '_blank']) : ' ', $this->inputOptions);
+        $this->parts['{input}'] = Html::tag('p', $text ? Html::a($img, $url, $this->linkOptions) : ' ', $this->inputOptions);
 
         return parent::render($content);
     }

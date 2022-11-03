@@ -11,7 +11,9 @@ use yii\widgets\ActiveField;
  */
 class StaticFileField extends ActiveField
 {
-    public $inputOptions = [];
+    public $inputOptions = ['class' => 'img-responsive'];
+
+    public $linkOptions = ['target' => '_blank'];
 
     /**
      * {@inheritdoc}
@@ -23,7 +25,7 @@ class StaticFileField extends ActiveField
         $text = $model->getAttribute($this->attribute);
         $url = $model->getUploadUrl($this->attribute);
 
-        $this->parts['{input}'] = Html::tag('p', Html::a($text ?: ' ', $url, ['target' => '_blank']), $this->inputOptions);
+        $this->parts['{input}'] = Html::tag('p', Html::a($text ?: ' ', $url, $this->linkOptions), $this->inputOptions);
 
         return parent::render($content);
     }
