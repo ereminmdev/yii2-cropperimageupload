@@ -139,6 +139,19 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
+     * Deletes old file.
+     * @param string $attribute
+     * @param boolean $old
+     */
+    protected function delete($attribute, $old = false)
+    {
+        $path = $this->getUploadPath($attribute, $old);
+        if ($path && is_file($path)) {
+            unlink($path);
+        }
+    }
+
+    /**
      * {@inheritdoc}
      * @throws ErrorException
      */
