@@ -283,9 +283,9 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     {
         $value = $this->cropValue;
 
-        if (mb_strpos($value, 'action=') === 0) {
+        if (mb_stripos($value, 'action=') === 0) {
             $this->action = mb_substr($value, 7);
-        } elseif ((mb_strpos($value, 'data:image') === 0) && mb_strpos($value, 'base64,')) {
+        } elseif ((mb_stripos($value, 'data:image') === 0) && mb_stripos($value, 'base64,')) {
             $this->createFromBase64($value);
         } elseif (filter_var($value, FILTER_VALIDATE_URL)) {
             $this->createFromUrl($value);
