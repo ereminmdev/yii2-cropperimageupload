@@ -14,7 +14,7 @@ class UploadUrlFile extends UploadedFile
         if ($this->error == UPLOAD_ERR_OK) {
             $result = copy($this->tempName, $file);
             if ($deleteTempFile) {
-                unlink($this->tempName);
+                @unlink($this->tempName);
             }
             return $result;
         }
