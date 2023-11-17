@@ -372,9 +372,11 @@ class CropperImageUploadBehavior extends UploadImageBehavior
                 imagedestroy($im);
             }
 
-            $newName = preg_replace('/' . $extension . '$/', 'webp', $this->file->name);
-            $this->file = $this->createUploadedFile($newName, $newTempName);
-            $this->owner->setAttribute($this->attribute, $this->file);
+            if (file_exists($newTempName)) {
+                $newName = preg_replace('/' . $extension . '$/', 'webp', $this->file->name);
+                $this->file = $this->createUploadedFile($newName, $newTempName);
+                $this->owner->setAttribute($this->attribute, $this->file);
+            }
         }
     }
 
