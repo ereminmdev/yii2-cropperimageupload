@@ -93,19 +93,18 @@
             $cropInput = settings.cropInputSel ? $container.find(settings.cropInputSel) : $input.prev('input'),
             $modal = $(settings.modalSel),
             $resultImage = $container.find(settings.resultImageSel),
-            $image, cropper,
+            $image, cropper, $currentSize,
             $body = $modal.find('.modal-body');
 
         $modal.find('.modal-title').html(settings.modalTitle);
 
         let $footer = settings.modalFooter ? settings.modalFooter : $('<div class="cropper-modal-footer">' +
             '<button type="button" class="btn btn-primary btn-save" data-dismiss="modal">' + settings.btnSaveText + '</button>' +
-            '  ' +
-            '<button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">' + settings.btnCancelText + '</button>' +
-            '        ' +
-            (settings.btnRotateLeft ? '<button type="button" class="btn btn-default btn-rotate" data-deg="-90">' + settings.btnRotateLeft + '</button>' : '') +
-            '  ' +
-            (settings.btnRotateRight ? '<button type="button" class="btn btn-default btn-rotate" data-deg="90">' + settings.btnRotateRight + '</button>' : '') +
+            '  <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">' + settings.btnCancelText + '</button>' +
+            '      ' +
+            (settings.btnRotateLeft ? '  <button type="button" class="btn btn-default btn-rotate" data-deg="-90">' + settings.btnRotateLeft + '</button>' : '') +
+            (settings.btnRotateRight ? '  <button type="button" class="btn btn-default btn-rotate" data-deg="90">' + settings.btnRotateRight + '</button>' : '') +
+            '      <button type="button" class="btn btn-default btn-current-size"></button>' +
             '</div>');
 
         $footer.find('.btn-save').on('click', function (e) {
@@ -137,6 +136,8 @@
             e.preventDefault();
         });
 
+        $currentSize = $footer.find('.btn-current-size');
+
         $body.empty();
         $modal.off('shown.bs.modal hidden.bs.modal');
         $modal.modal('show');
@@ -155,6 +156,10 @@
                     let vw = w - 80;
                     let wh = Math.round(vw / settings.aspectRatio);
                     $imageWrapper.height(wh + 80);
+
+                    $image.on('crop', (event) => {
+                        $currentSize.html(Math.floor(event.detail.width) + 'x' + Math.floor(event.detail.height));
+                    });
 
                     let cropperOptions = {
                         aspectRatio: settings.aspectRatio,
