@@ -69,8 +69,9 @@
 
         btnSaveText: 'Save',
         btnCancelText: 'Cancel',
-        btnRotateLeft: '&larrpl;',
-        btnRotateRight: '&cudarrl;',
+        btnRotateRight: '↻',
+        btnFlipHorizontal: '↔',
+        btnFlipVertical: '↕',
 
         onBeforeCrop: function (imageSrc, settings) {
             return true;
@@ -100,11 +101,13 @@
 
         let $footer = settings.modalFooter ? settings.modalFooter : $('<div class="cropper-modal-footer">' +
             '<button type="button" class="btn btn-primary btn-save" data-dismiss="modal">' + settings.btnSaveText + '</button>' +
-            '  <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">' + settings.btnCancelText + '</button>' +
-            '      ' +
-            (settings.btnRotateLeft ? '  <button type="button" class="btn btn-default btn-rotate" data-deg="-90">' + settings.btnRotateLeft + '</button>' : '') +
-            (settings.btnRotateRight ? '  <button type="button" class="btn btn-default btn-rotate" data-deg="90">' + settings.btnRotateRight + '</button>' : '') +
-            '      <button type="button" class="btn btn-default btn-current-size"></button>' +
+            '       ' +
+            '<button type="button" class="btn btn-default btn-rotate" data-deg="90">' + settings.btnRotateRight + '</button>' +
+            '<button type="button" class="btn btn-default btn-flip-h">' + settings.btnFlipHorizontal + '</button>' +
+            '<button type="button" class="btn btn-default btn-flip-v">' + settings.btnFlipVertical + '</button>' +
+            '<button type="button" class="btn btn-default btn-current-size"></button>' +
+            '       ' +
+            '<button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">' + settings.btnCancelText + '</button>' +
             '</div>');
 
         $footer.find('.btn-save').on('click', function (e) {
@@ -133,6 +136,20 @@
 
         $footer.find('.btn-rotate').on('click', function (e) {
             cropper.rotate(parseInt($(this).data('deg')));
+            e.preventDefault();
+        });
+
+        let flipH = -1;
+        $footer.find('.btn-flip-h').on('click', function (e) {
+            cropper.scale(flipH, 1);
+            flipH *= -1;
+            e.preventDefault();
+        });
+
+        let flipV = -1;
+        $footer.find('.btn-flip-v').on('click', function (e) {
+            cropper.scale(1, flipV);
+            flipV *= -1;
             e.preventDefault();
         });
 
