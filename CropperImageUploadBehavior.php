@@ -362,7 +362,8 @@ class CropperImageUploadBehavior extends UploadImageBehavior
                 return;
             }
 
-            $im = @imagecreatefromjpeg($tempName) ?: @imagecreatefrompng($tempName);
+            $im = in_array($extension, ['jpg', 'jpeg']) ? @imagecreatefromjpeg($tempName) : @imagecreatefrompng($tempName);
+            $im = $im ?: @imagecreatefromjpeg($tempName) ?: @imagecreatefrompng($tempName);
 
             if ($im) {
                 imagepalettetotruecolor($im);
