@@ -102,12 +102,14 @@
         let $footer = settings.modalFooter ? settings.modalFooter : $('<div class="cropper-modal-footer">' +
             '<button type="button" class="btn btn-primary btn-save" data-dismiss="modal">' + settings.btnSaveText + '</button>' +
             '       ' +
+            '<div class="btn-group">' +
             '<button type="button" class="btn btn-default btn-rotate" data-deg="90">' + settings.btnRotateRight + '</button>' +
             '<button type="button" class="btn btn-default btn-flip-h">' + settings.btnFlipHorizontal + '</button>' +
             '<button type="button" class="btn btn-default btn-flip-v">' + settings.btnFlipVertical + '</button>' +
             '<button type="button" class="btn btn-default btn-current-size"></button>' +
+            '</div>' +
             '       ' +
-            '<button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">' + settings.btnCancelText + '</button>' +
+            '<button type="button" class="btn btn-link btn-cancel" data-dismiss="modal">' + settings.btnCancelText + '</button>' +
             '</div>');
 
         $footer.find('.btn-save').on('click', function (e) {
