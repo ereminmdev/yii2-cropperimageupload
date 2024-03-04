@@ -67,9 +67,9 @@ foreach (User::find()->each() as $model) {
     $filename = $model->getAttribute('avatar');
 
     if ($model->recreateThumbs('avatar', true, true)) {
-        $this->stdout('Recreated successful: ' . $filename . PHP_EOL);
+        $this->stdout('Recreated successful: ' . $filename . "\n");
     } else {
-        $this->stdout('Error when recreating: ' . $filename . PHP_EOL, Console::FG_RED);
+        $this->stdout('Error when recreating: ' . $filename . "\n", Console::FG_RED);
     }
 }
 ```

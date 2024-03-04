@@ -147,7 +147,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     {
         $path = $this->getUploadPath($attribute, $old);
         if ($path && is_file($path)) {
-            unlink($path);
+            @unlink($path);
         }
     }
 
@@ -325,7 +325,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             file_put_contents($temp_path, $data);
 
             $this->owner->setAttribute($this->attribute, $this->createUploadedFile($temp_name, $temp_path));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Yii::error($e, __METHOD__);
         }
     }
@@ -346,7 +346,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             file_put_contents($temp_path, file_get_contents($url));
 
             $this->owner->setAttribute($this->attribute, $this->createUploadedFile($temp_name, $temp_path));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Yii::error($e, __METHOD__);
         }
     }
@@ -414,7 +414,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
 
                     return true;
                 }
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 Yii::error($e, __METHOD__);
             }
         }
