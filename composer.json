@@ -2,7 +2,7 @@
   "name": "ereminmdev/yii2-cropperimageupload",
   "description": "Image crop and upload for Yii framework.",
   "keywords": ["yii2","behavior","upload","crop","image"],
-  "homepage": "https://bitbucket.org/ereminmdev/yii2-cropperimageupload",
+  "homepage": "https://github.com/ereminmdev/yii2-cropperimageupload",
   "type": "yii2-extension",
   "license": "MIT",
   "authors": [

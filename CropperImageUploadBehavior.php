@@ -200,7 +200,9 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             }
         }
 
-        return Html::img($behavior->getImageUrl($attribute, $thumb), $options);
+        $src = $options['src'] ?? $behavior->getImageUrl($attribute, $thumb);
+
+        return Html::img($src, $options);
     }
 
     /**
