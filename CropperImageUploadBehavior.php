@@ -2,6 +2,8 @@
 
 namespace ereminmdev\yii2\cropperimageupload;
 
+use Imagine\Image\Box;
+use Imagine\Image\Point;
 use mohorev\file\UploadBehavior;
 use mohorev\file\UploadImageBehavior;
 use Yii;
@@ -9,6 +11,7 @@ use yii\base\ErrorException;
 use yii\db\ActiveRecord;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
+use yii\imagine\Image;
 use yii\web\UploadedFile;
 
 /**
@@ -68,6 +71,10 @@ class CropperImageUploadBehavior extends UploadImageBehavior
      * @var bool|string remove directory after model deleted. Set true to use `path` option or string as path.
      */
     public $deleteDir = true;
+    /**
+     * @var string path to watermark file
+     */
+    public $watermark = null;
 
     protected $cropValue;
     protected $action;
@@ -139,16 +146,35 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     }
 
     /**
-     * Deletes old file.
-     * @param string $attribute
-     * @param boolean $old
+     * {@inheritdoc}
      */
-    protected function delete($attribute, $old = false)
+    protected function afterUpload()
     {
-        $path = $this->getUploadPath($attribute, $old);
-        if ($path && is_file($path)) {
-            @unlink($path);
+        if ($this->watermark !== null) {
+            $path = Yii::getAlias($this->resolvePath($this->watermark));
+
+            if (is_readable($path)) {
+                $imagePath = $this->getUploadPath($this->attribute);
+                $image = Image::getImagine()->open($imagePath);
+                $watermark = Image::getImagine()->open($path);
+
+                $imageSize = $image->getSize();
+                $imageWidth = $imageSize->getWidth();
+                $imageHeight = $imageSize->getHeight();
+
+                if ($imageWidth >= $imageHeight) {
+                    $watermark->resize(new Box($imageHeight, $imageHeight));
+                    $image->paste($watermark, new Point(round($imageWidth - $imageHeight) / 2, 0));
+                } else {
+                    $watermark->resize(new Box($imageWidth, $imageWidth));
+                    $image->paste($watermark, new Point(0, round($imageHeight - $imageWidth) / 2));
+                }
+
+                $image->save($imagePath);
+            }
         }
+
+        parent::afterUpload();
     }
 
     /**
@@ -411,8 +437,6 @@ class CropperImageUploadBehavior extends UploadImageBehavior
                     if ($saveModel) {
                         $model->save(true, [$attribute]);
                     }
-
-                    @unlink($temp_path);
 
                     return true;
                 }
