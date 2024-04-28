@@ -85,7 +85,7 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     public function init()
     {
         parent::init();
-        $this->croppedField = $this->croppedField !== null ? $this->croppedField : $this->attribute;
+        $this->croppedField ??= $this->attribute;
     }
 
     /**
@@ -211,10 +211,10 @@ class CropperImageUploadBehavior extends UploadImageBehavior
         }
 
         if ($thumb && in_array($thumb, array_keys($behavior->thumbs))) {
-            $options['alt'] = $options['alt'] ?? '';
-            $options['loading'] = $options['loading'] ?? 'lazy';
-            $options['width'] = $options['width'] ?? ($behavior->thumbs[$thumb]['width'] ?? null);
-            $options['height'] = $options['height'] ?? ($behavior->thumbs[$thumb]['height'] ?? null);
+            $options['alt'] ??= '';
+            $options['loading'] ??= 'lazy';
+            $options['width'] ??= $behavior->thumbs[$thumb]['width'] ?? null;
+            $options['height'] ??= $behavior->thumbs[$thumb]['height'] ?? null;
 
             if ($behavior->cropAspectRatio) {
                 Html::addCssStyle($options, ['aspect-ratio' => $behavior->cropAspectRatio], false);
@@ -342,8 +342,8 @@ class CropperImageUploadBehavior extends UploadImageBehavior
     public function createFromBase64($data)
     {
         try {
-            list($type, $data) = explode(';', $data);
-            list(, $data) = explode(',', $data);
+            [$type, $data] = explode(';', $data);
+            [, $data] = explode(',', $data);
             $ext = mb_substr($type, mb_strrpos($type, '/') + 1);
             $data = base64_decode($data);
 
