@@ -30,7 +30,7 @@ public function behaviors()
             'url' => '@web/upload/avatar/{id}',
             'thumbs' => [
                 'thumb' => ['width' => 60, 'height' => 60, 'quality' => 80, 'mode' => ManipulatorInterface::THUMBNAIL_OUTBOUND],
-                'preview' => ['width' => 240, 'height' => 240],
+                'preview' => ['width' => 240, 'height' => 240, 'bg_alpha' => 0],
             ],
             'cropAspectRatio' => 1,
         ],
@@ -55,7 +55,7 @@ public function rules()
 
 ```php
 <?= $model->renderThumbImage('avatar') ?>
-<?= $model->renderThumbImage('avatar', 'preview', ['alt'=>'Avatar']) ?>
+<?= $model->renderThumbImage('avatar', 'preview', ['alt' => 'Avatar']) ?>
 ```
 
 ## Tips
