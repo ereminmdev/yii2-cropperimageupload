@@ -127,7 +127,7 @@ class CropperImageUploadWidget extends InputWidget
             'containerSel' => '.' . $this->containerClass,
             'cropInputSel' => '#' . $this->options['id'] . '_crop',
             'resultImageSel' => $this->resultImageSel,
-            'btnSaveText' => Yii::t('app', 'Save'),
+            'btnSaveText' => Yii::t('app', 'Ok'),
             'btnCancelText' => Yii::t('app', 'Cancel'),
             'cropperOptions' => $this->cropperOptions,
             'cropperResultOpts' => $this->cropperResultOpts,

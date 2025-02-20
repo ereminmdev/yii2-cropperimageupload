@@ -67,7 +67,7 @@
         },
         imageCSS: {},
 
-        btnSaveText: 'Save',
+        btnSaveText: 'Ok',
         btnCancelText: 'Cancel',
         btnRotateRight: '↻',
         btnFlipHorizontal: '↔',
