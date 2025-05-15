@@ -210,9 +210,10 @@ class CropperImageUploadBehavior extends UploadImageBehavior
             }
         }
 
+        $options['alt'] ??= '';
+        $options['loading'] ??= 'lazy';
+
         if ($thumb && in_array($thumb, array_keys($behavior->thumbs))) {
-            $options['alt'] ??= '';
-            $options['loading'] ??= 'lazy';
             $options['width'] ??= $behavior->thumbs[$thumb]['width'] ?? null;
             $options['height'] ??= $behavior->thumbs[$thumb]['height'] ?? null;
 
